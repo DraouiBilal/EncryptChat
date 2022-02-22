@@ -7,14 +7,16 @@ const form = document.querySelector("#loginForm") as HTMLFormElement
 
 form.addEventListener("submit",async (e:Event)=> {
     e.preventDefault()
-    
     const credentials : ICredentials = {
         login: login.value,
         password: password.value
     }    
-    try {
-        const res = await api.post("/login",credentials)
+    try { 
+        const res = await api.post("/api/v1/login",credentials)
+        console.log(res);
+        
     } catch (err:unknown) {
+        console.log(err);
         if (typeof e === "string") {
             console.log(`${e}`.toUpperCase())
         } 

@@ -1,35 +1,49 @@
 import { createServer } from 'http';
-const server = createServer((request, response) => {
-    response.setHeader('Content-Type', 'application/json');
-    switch (request.url) {
-        case '/login': {
-            switch (request.method) {
-                case 'POST':
-                    return response.end("res received");
-                    let body = '';
-                    request.on('data', (chunk) => {
+const PORT = 5000;
+const HOST = "localhost";
+// methods
+const POST = "POST";
+const OPTIONS = "OPTIONS";
+// links 
+const LOGIN_LINK = "/api/v1/login";
+const server = createServer((req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    let body = "";
+    switch (req.url) {
+        case LOGIN_LINK:
+            switch (req.method) {
+                case POST:
+                    req.on("data", chunk => {
                         body += chunk;
                     });
-                    request.on('end', () => {
-                        console.log(JSON.parse(body));
-                        response.writeHead(200, { 'Content-Type': 'application/json' });
-                        response.end(body);
+                    req.on("end", () => {
+                        const { login, password } = JSON.parse(body);
+                        console.log(login, password);
+                        res.end();
                     });
                     break;
-                default:
+                case OPTIONS:
+                    res.writeHead(200, {
+                        "Accept": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "*",
+                        "Access-Control-Allow-Headers": "*"
+                    });
+                    res.end();
                     break;
+                default:
+                    res.writeHead(405, { "Content-Type": "application/json" });
+                    res.write(JSON.stringify({
+                        "msg": "METHOD NOT ALLOWED"
+                    }));
+                    res.end();
             }
             break;
-        }
-        default: {
-            response.statusCode = 404;
-            response.end();
-            break;
-        }
+        default:
+            res.writeHead(404, { "Content-Type": "text/html" });
+            res.end("404 NOT FOUND");
     }
 });
-const PORT = 5000;
-const HOST = '127.0.0.1';
 server.listen(PORT, HOST, () => {
-    console.log(`Server started on port ${PORT}`);
+    console.log(`listening on port ${PORT}`);
 });

@@ -18,9 +18,11 @@ form.addEventListener("submit", (e) => __awaiter(void 0, void 0, void 0, functio
         password: password.value
     };
     try {
-        const res = yield api.post("/login", credentials);
+        const res = yield api.post("/api/v1/login", credentials);
+        console.log(res);
     }
     catch (err) {
+        console.log(err);
         if (typeof e === "string") {
             console.log(`${e}`.toUpperCase());
         }
