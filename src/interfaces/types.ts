@@ -1,0 +1,1 @@
+export type loginT = {credentials: string, password: string}

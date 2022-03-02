@@ -13,7 +13,13 @@ const fetchOptions : RequestInit = {
 
 export const get = (url:string) : Promise<Response> =>{
     fetchOptions.method = 'GET'
-    return fetch(`${baseURL}${url}`)
+    return fetch(`${baseURL}${url}`).then(response => {
+        if (!response.ok) {
+          console.log(response)
+          throw new Error(response.statusText)
+        }
+        return response.json()
+      })
 }
 
 export const post = (url:string,data:any={}) : Promise<Response> =>{
@@ -21,13 +27,12 @@ export const post = (url:string,data:any={}) : Promise<Response> =>{
     fetchOptions.body = JSON.stringify(data)
     
     return fetch(`${baseURL}${url}`,fetchOptions)
-    // .then(response => {
-    //   console.log(response);
-    //   // if (!response.ok) {
-    //   //   console.log(response)
-    //   //   throw new Error(response.statusText)
-    //   // }
-    //   return response.json()
-    // })
+    .then(response => {
+      if (!response.ok) {
+        console.log(response)
+        throw new Error(response.statusText)
+      }
+      return response.json()
+    })
 }
 
