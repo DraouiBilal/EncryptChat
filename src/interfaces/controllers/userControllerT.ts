@@ -6,4 +6,5 @@ type controller = (req: IncomingMessage,res: ServerResponse) => Promise<ServerRe
 export default interface UserControllerT {
     login: controller,
     register: controller,
+    update: controller
 }

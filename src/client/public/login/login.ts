@@ -9,7 +9,7 @@ const form = document.querySelector("#loginForm") as HTMLFormElement
 window.addEventListener("load",():void => {
     const data:string | null = localStorage.getItem("user")
     if(data)
-        window.location.href = "http://127.0.0.1:5501/server/client/public/login/index.html"
+        window.location.href = "http://127.0.0.1:5501/server/client/public/index.html"
 })
 
 form.addEventListener("submit",async (e:Event)=> {
@@ -21,8 +21,7 @@ form.addEventListener("submit",async (e:Event)=> {
     try { 
         const res:any = await api.post("/api/v1/login",credentials)
         localStorage.setItem("user",JSON.stringify(res))
-        
-        
+        window.location.href = "http://127.0.0.1:5501/server/client/public/index.html"
     } catch (err:unknown) {
         if (typeof e === "string") {
             console.log(`${e}`.toUpperCase())

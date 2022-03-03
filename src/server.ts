@@ -12,6 +12,7 @@ const OPTIONS:string = "OPTIONS"
 // links 
 const LOGIN_LINK:string = "/api/v1/login"
 const REGISTER_LINK:string = "/api/v1/register"
+const UPDATE_LINK:string = "/api/v1/update"
 
 const server = createServer(async (req: IncomingMessage,res: ServerResponse)=>{
     res.setHeader("Access-Control-Allow-Origin", "*")
@@ -43,6 +44,28 @@ const server = createServer(async (req: IncomingMessage,res: ServerResponse)=>{
             {
                 case POST: 
                     return UserController.register(req,res)
+                case OPTIONS:
+                    res.writeHead(200,{
+                        "Accept": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "*",
+                        "Access-Control-Allow-Headers": "*"
+                    })    
+                    res.end()
+                break
+                default:
+                    res.writeHead(405, {"Content-Type": "application/json"})
+                    res.write(JSON.stringify({
+                        "msg": "METHOD NOT ALLOWED"
+                    }))
+                    res.end()
+            }
+            break;
+        case UPDATE_LINK:
+            switch(req.method)
+            {
+                case POST: 
+                    return UserController.update(req,res)
                 case OPTIONS:
                     res.writeHead(200,{
                         "Accept": "application/json",

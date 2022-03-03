@@ -12,6 +12,12 @@ const UserValidator = async () => {
             if (!(body.password && body.password.length >= 8 && body.password.length <= 25) || !body.email || !body.email.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$") || !body.username)
                 return null;
             return body;
+        },
+        update: async (req) => {
+            const body = await bodyParser(req);
+            if (!(body.password && body.password.length >= 8 && body.password.length <= 25) || !body.email || !body.email.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$") || !body.username)
+                return null;
+            return body;
         }
     };
     return userValidator;

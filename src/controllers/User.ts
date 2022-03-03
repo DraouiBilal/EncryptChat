@@ -33,13 +33,26 @@ const UserController = async (): Promise<UserControllerT> => {
         register: async (req:IncomingMessage,res:ServerResponse) => {
             try {
                 let body:TUser | null = await UserValidator.register(req)
-                console.log(body);
-                
                 if(!body){
                     res.writeHead(400,{"Content-Type": "application/json"})
                     return res.end(JSON.stringify({msg:"Email, Username or password is missing from body"}))
                 }
                 const user:(TUser | null | undefined) = await UserDAO?.create(body)
+                res.writeHead(200,{"Content-Type": "application/json"})
+                return res.end(JSON.stringify({user: user!}))
+            } catch (err: unknown){                
+                res.writeHead(500,{"Content-Type": "application/json"})
+                return res.end(JSON.stringify({msg:"Server Error"}))
+            }
+        },
+        update: async (req:IncomingMessage,res:ServerResponse) => {
+            try {
+                let body:TUser | null = await UserValidator.register(req)
+                if(!body){
+                    res.writeHead(400,{"Content-Type": "application/json"})
+                    return res.end(JSON.stringify({msg:"Email, Username or password is missing from body"}))
+                }
+                const user:(TUser | null | undefined) = await UserDAO?.update(body._id?.toString()!,body)
                 res.writeHead(200,{"Content-Type": "application/json"})
                 return res.end(JSON.stringify({user: user!}))
             } catch (err: unknown){                
