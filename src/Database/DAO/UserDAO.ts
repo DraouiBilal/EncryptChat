@@ -22,8 +22,12 @@ const UserSchema = async () => {
         }
         return null
     }
-
-    users = db.collection("users")
+    try{
+        users = db.collection("users")
+    }catch(err: unknown) {
+        await db.createCollection("users")
+        users = db.collection("users")
+    }
 
     const userDAO:UserDAOT  = {
         findById: (_id:string)=> {

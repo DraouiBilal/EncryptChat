@@ -1,7 +1,7 @@
 type configT = {uri:string,database:string}
 
 const config:configT  = {
-    uri:"mongodb://localhost/?maxPoolSize=20&w=majority",
+    uri:"mongodb://mongo/?maxPoolSize=20&w=majority",
     database:"EncryptChat"
 }
 

@@ -9,7 +9,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "nodemon server/server.js",
-    "start": "node server/server.js"
+    "start": "tsc && node server/server.js"
   },
   "author": "",
   "license": "ISC",

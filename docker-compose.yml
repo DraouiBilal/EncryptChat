@@ -1,0 +1,25 @@
+version: "3"
+services:
+       EncryptChat:
+           container_name: EncryptChat
+           image: encryptchat
+           restart: always
+           build: .
+           ports:
+             - "5000:5000"
+           links:
+             - mongo
+           networks:
+              - api
+       mongo:
+             container_name: mongo
+             image: mongo
+             volumes:
+               - ./data:/data/db
+             ports:
+               - '27017:27017'
+             networks:
+               - api
+networks:
+  api:
+    driver: bridge
