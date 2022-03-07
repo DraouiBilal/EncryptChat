@@ -74,14 +74,13 @@ ws.addEventListener("message", async (e) => {
         const dt = data.data;
         publicKeys[dt.username] = getArrayBuffer(dt.publicKey);
     }
-    // else if(data.type==="getAllKeys"){
-    //     const dt:{publicKeys: string} = data.data
-    //     console.log(dt.publicKeys);
-    //     Object.keys(dt.publicKeys).forEach((el:string) => {
-    //         publicKeys[el] = hashArrayBuffer(dt.publicKeys[el])
-    //     })
-    //     console.log(publicKeys);
-    // }
+    else if (data.type === "getAllKeys") {
+        const dt = data.data;
+        Object.keys(dt.publicKeys).forEach((el) => {
+            const keysPK = dt.publicKeys;
+            publicKeys[el] = getArrayBuffer(keysPK[el]);
+        });
+    }
     else {
         const li = document.createElement("li");
         const dt = data.data;

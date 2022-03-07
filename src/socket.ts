@@ -21,8 +21,8 @@ const socket = (server:Server) => {
                 const id:string = (msg.data as {_id:string,publicKey:string})._id
                 lookupTable[id] = ws 
                 const user:TUser | null | undefined = await UserDAO?.findById(id)
-                // publicKeys[user?.username!] = msg.data.publicKey 
-                // ws.send(JSON.stringify({type:"getAllKeys",data:{publicKeys}}))
+                publicKeys[user?.username as string] = (msg.data as {_id:string,publicKey:string}).publicKey
+                ws.send(JSON.stringify({type: "getAllKeys",data: {publicKeys}}))
                 const ids:string[] = Object.keys(lookupTable)
                 ids.forEach(async id => {
                     const connectedUsers: (TUser | null | undefined)[] = await Promise.all(ids.filter((el:string)=> (el!==id)).map(async(el:string):Promise<TUser | null | undefined> => await UserDAO?.findById(el)))

@@ -59,7 +59,7 @@ const ws:WebSocket = new WebSocket("wss://localhost:5000")
 
 ws.addEventListener("open",async ()=> {
     console.log('ws opened on browser')
-    const publicKey = await crypto.subtle.exportKey("spki",keyPair.publicKey)
+    const publicKey:ArrayBuffer = await crypto.subtle.exportKey("spki",keyPair.publicKey as CryptoKey)
     ws.send(JSON.stringify({type:"connection",data:{_id:user._id,publicKey:hashArrayBuffer(publicKey)}}))
 }) 
 
@@ -95,20 +95,18 @@ ws.addEventListener("message",async(e: MessageEvent<string>) => {
         publicKeys[dt.username] = getArrayBuffer(dt.publicKey)
         
     }
-    // else if(data.type==="getAllKeys"){
-    //     const dt:{publicKeys: string} = data.data
-    //     console.log(dt.publicKeys);
-    //     Object.keys(dt.publicKeys).forEach((el:string) => {
-    //         publicKeys[el] = hashArrayBuffer(dt.publicKeys[el])
-    //     })
-    //     console.log(publicKeys);
-           
-    // }
+    else if(data.type==="getAllKeys"){
+        const dt:{publicKeys: string} = data.data
+        Object.keys(dt.publicKeys).forEach((el:string) => {
+            const keysPK: any = dt.publicKeys
+            publicKeys[el] = getArrayBuffer(keysPK[el])
+        })
+    }
     else {
         const li = document.createElement("li") as HTMLLIElement;
         const dt:{from:string,msg:string} = data.data
         const arrbuf = getArrayBuffer(dt.msg)
-        const decrypted = await window.crypto.subtle.decrypt({name: "RSA-OAEP"},keyPair.privateKey,arrbuf)
+        const decrypted = await window.crypto.subtle.decrypt({name: "RSA-OAEP"},keyPair.privateKey as CryptoKey,arrbuf)
         
         li.innerHTML = `<li class="you">
                             <div class="entete">
