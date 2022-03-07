@@ -1,20 +1,30 @@
-import { createServer, IncomingMessage, ServerResponse }  from 'http'
-import bodyParser from './utils/bodyParser.js'
+import { IncomingMessage, ServerResponse }  from 'http'
+import { createServer } from 'https'
+import fs from 'fs'
+import socket from './socket.js'
 import UserController from './controllers/User.js'
+
+
+const options = {
+  key: fs.readFileSync('./server/keys/key.pem'),
+  cert: fs.readFileSync('./server/keys/cert.pem')
+};
 
 const PORT:number = 5000
 const HOST:string = "localhost"
 
 // methods
+const GET:string = "GET" 
 const POST:string = "POST" 
 const OPTIONS:string = "OPTIONS"
 
 // links 
+const HOME_PAGE:string = "/"
 const LOGIN_LINK:string = "/api/v1/login"
 const REGISTER_LINK:string = "/api/v1/register"
 const UPDATE_LINK:string = "/api/v1/update"
 
-const server = createServer(async (req: IncomingMessage,res: ServerResponse)=>{
+const server = createServer(options,(req: IncomingMessage,res: ServerResponse)=>{
     res.setHeader("Access-Control-Allow-Origin", "*")
     switch(req.url){
         case LOGIN_LINK:
@@ -84,11 +94,21 @@ const server = createServer(async (req: IncomingMessage,res: ServerResponse)=>{
             }
             break;
         default:
-            res.writeHead(404, {"Content-Type": "text/html"});
-            res.end("404 NOT FOUND")
+            try {
+                if(req.url?.substring(req.url.length-2,req.url.length)==="js")
+                    res.writeHead(200,{"Content-Type": "application/javascript"})
+                const buff:Buffer = fs.readFileSync(`./server/client/public${req.url==="/"?"/index.html":req.url}`)
+                if(req.method===GET)
+                    res.end(buff)
+            } catch (err) {
+                res.writeHead(404, {"Content-Type": "text/html"});
+                res.end("404 NOT FOUND")
+            }
+            
     }
 })
 
 server.listen(PORT,HOST,async ()=>{
-    console.log(`listening on port ${PORT}`)        
+    console.log(`listening on port ${PORT}`)   
+    socket(server)  
 })

@@ -4,9 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="./index/index.css">
+    <title>Chat</title>
 </head>
 <body>
-    <h1>Home page</h1>
+    <div id="container">
+        <aside>
+            <header>
+                <img class="logoImage" src="./EncryptChatLogo.png">
+            </header>
+            <ul id="friends">
+                
+            </ul>
+        </aside>
+        <main>
+            <header>
+                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+                <div>
+                    <h2 id="identifier"></h2>
+                    <h3>already 1902 messages</h3>
+                </div>
+            </header>
+            <ul id="chat"></ul>
+            <footer>
+                <form id="form">
+                    <input id="message" placeholder="Type your message" type="text">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png" alt="">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png" alt="">
+                    <a type="submit" href="#">Send</a>
+                </form>
+            </footer>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="./index/index.js"></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
-import * as api from "../../utils/api.js";
+import * as api from "../utils/api.js";
 const login = document.querySelector("#login");
 const password = document.querySelector("#password");
 const form = document.querySelector("#loginForm");
 window.addEventListener("load", () => {
     const data = localStorage.getItem("user");
     if (data)
-        window.location.href = "http://127.0.0.1:5501/server/client/public/index.html";
+        window.location.href = "https://localhost:5000/";
 });
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ form.addEventListener("submit", async (e) => {
     try {
         const res = await api.post("/api/v1/login", credentials);
         localStorage.setItem("user", JSON.stringify(res));
-        window.location.href = "http://127.0.0.1:5501/server/client/public/index.html";
+        window.location.href = "https://localhost:5000/";
     }
     catch (err) {
         if (typeof e === "string") {

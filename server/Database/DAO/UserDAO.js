@@ -1,5 +1,6 @@
-import Connection from '../db.js';
+import crypto from 'crypto';
 import { ObjectId } from 'mongodb';
+import Connection from '../db.js';
 const UserSchema = async () => {
     let db;
     let users;
@@ -29,6 +30,9 @@ const UserSchema = async () => {
             });
         },
         create: async (user) => {
+            const salt = crypto.randomBytes(16).toString('hex');
+            user.password = crypto.pbkdf2Sync(user.password, salt, 1000, 64, 'sha512').toString('hex');
+            user.salt = salt;
             const res = await users.insertOne(user);
             if (res.acknowledged) {
                 const userWithId = Object.assign(Object.assign({}, user), { _id: res.insertedId });
@@ -50,5 +54,4 @@ const UserSchema = async () => {
     };
     return userDAO;
 };
-const dao = await UserSchema();
-export default dao;
+export default await UserSchema();

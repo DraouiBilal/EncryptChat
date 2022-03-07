@@ -7,5 +7,6 @@ export interface TUser {
     email:string,
     telephone?:string,
     username:string,
-    password:string
+    password:string,
+    salt?:string
 }

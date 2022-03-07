@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse }  from 'http'
+import crypto from 'crypto'
 import UserControllerT from '../interfaces/controllers/userControllerT.js'
 import UserDAO from '../Database/DAO/UserDAO.js'
 import { TUser } from '../Database/models/User'
@@ -19,12 +20,17 @@ const UserController = async (): Promise<UserControllerT> => {
                 }
                 const {credentials,password} = body
                 const user:(TUser | null | undefined) = await UserDAO?.findByCredentials(credentials)
-                if(!user || user.password !== password){
-                    res.writeHead(400,{"Content-Type": "application/json"})
-                    return res.end(JSON.stringify({msg:"Invalid Credentials"}))
+                if(user){
+                    const hash = crypto.pbkdf2Sync(password,user.salt!, 1000, 64, `sha512`).toString(`hex`);                     
+                    if(user.password !== hash){
+                        res.writeHead(400,{"Content-Type": "application/json"})
+                        return res.end(JSON.stringify({msg:"Invalid Credentials"}))   
+                    }
+                    res.writeHead(200,{"Content-Type": "application/json"})
+                    return res.end(JSON.stringify({user:user!}))
                 }
-                res.writeHead(200,{"Content-Type": "application/json"})
-                return res.end(JSON.stringify({user:user!}))
+                res.writeHead(400,{"Content-Type": "application/json"})
+                return res.end(JSON.stringify({msg:"Invalid Credentials"}))             
             } catch (err: unknown) {
                 res.writeHead(500,{"Content-Type": "application/json"})
                 return res.end(JSON.stringify({msg:"Server Error"}))

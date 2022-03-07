@@ -1,4 +1,6 @@
-const config: {uri:string,database:string} = {
+type configT = {uri:string,database:string}
+
+const config:configT  = {
     uri:"mongodb://localhost/?maxPoolSize=20&w=majority",
     database:"EncryptChat"
 }

@@ -1,7 +1,9 @@
+import crypto from 'crypto'
+import { Db, ObjectId, Collection, Document} from 'mongodb';
 import Connection from '../db.js'
-import { Db, ObjectId, Collection, Document, WithId } from 'mongodb';
 import { TUser } from '../models/User.js';
 import UserDAOT from '../../interfaces/DAO/userDAOT.js';
+import config from '../../config/config.js'
 
 const UserSchema = async () => {
 
@@ -37,6 +39,9 @@ const UserSchema = async () => {
             
         },
         create: async (user:TUser) => {
+            const salt:string = crypto.randomBytes(16).toString('hex')
+            user.password = crypto.pbkdf2Sync(user.password,salt,1000,64,'sha512').toString('hex')
+            user.salt = salt
             const res = await users.insertOne(user)
             if(res.acknowledged){
                 const userWithId:TUser = {
@@ -64,6 +69,4 @@ const UserSchema = async () => {
 
 }
 
-const dao = await UserSchema()
-
-export default dao
+export default await UserSchema()
